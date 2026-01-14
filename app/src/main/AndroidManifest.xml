@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  文件功能：定义应用程序的权限、四大组件及入口
+  注意：由于是广告机 APK，我们在这里将其声明为 Launcher
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <!-- 广告机常用权限：网络、开机自启 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:allowBackup="true"
+        android:label="kmslauncher"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <!-- 核心：成为系统桌面，按下 Home 键将回到此页面 -->
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <!-- 核心：在应用列表中可见 -->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
