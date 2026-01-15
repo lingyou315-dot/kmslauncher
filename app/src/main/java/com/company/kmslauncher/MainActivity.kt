@@ -1,40 +1,62 @@
 package com.company.kmslauncher
-import android.os.Bundle // 引入 Bundle 类
-import androidx.appcompat.app.AppCompatActivity // 引入 AppCompat 兼容基类
-import com.company.kmslauncher.core.IKmsModule // 引入模块接口
-import com.company.kmslauncher.modules.AdPlayerModule // 引入播放模块
-import com.company.kmslauncher.modules.MediaScannerModule // 引入扫描模块
-import com.company.kmslauncher.modules.YFHardwareModule // 引入硬件模块
+
+import android.os.Bundle
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import com.company.kmslauncher.databinding.ActivityMainBinding
+import com.company.kmslauncher.modules.player.PlayerManager
+import com.company.kmslauncher.core.LauncherEngine
+
 /**
- * MainActivity 文件功能：入口及模块管理器
- * 遵循原则：每一行代码都要注释，维持高度结构化
+ * 主界面 Activity
+ * 职责：生命周期管理、UI 初始化及按键拦截
  */
 class MainActivity : AppCompatActivity() {
-    // 定义活跃模块容器，用于统一管理生命周期
-    private val activeModules = mutableListOf<IKmsModule>()
-    // 活动创建时的入口函数
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 绑定并加载 activity_main.xml 布局
-        setContentView(R.layout.activity_main)
-        // 步骤 1: 注册硬件服务模块（处理状态栏和导航栏）
-        activeModules.add(YFHardwareModule())
-        // 步骤 2: 注册存储扫描模块（搜寻本地媒体文件）
-        activeModules.add(MediaScannerModule())
-        // 步骤 3: 注册最强播放器模块（执行混播逻辑）
-        activeModules.add(AdPlayerModule())
-        // 对所有已注册模块执行初始化操作
-        activeModules.forEach {
-            // 将当前 Activity 作为上下文传入
-            it.initialize(this)
-            // 启动该模块的业务逻辑
-            it.start()
-        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // 隐藏状态栏和导航栏
+        setupImmersiveMode()
+
+        // 启动核心引擎
+        LauncherEngine.start(this, binding)
+
+        // 初始化播放器
+        PlayerManager.initAndStart(this, binding)
+
+        // 激活跑马灯
+        binding.marqueeText.isSelected = true
     }
-    // 活动销毁时的收尾函数
-    override fun onDestroy() {
-        super.onDestroy()
-        // 循环停止所有活跃模块并释放资源
-        activeModules.forEach { it.stop() }
+
+    private fun setupImmersiveMode() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+        // 发送主板广播彻底隐藏
+        sendBroadcast(Intent("com.youngfeel.hide_status_bar"))
+        val navIntent = Intent("com.android.yf_set_navigation_bar")
+        navIntent.putExtra("value", 0)
+        sendBroadcast(navIntent)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // 释放资源，防止后台播放
+        PlayerManager.stopAndRelease()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        PlayerManager.initAndStart(this, binding)
     }
 }

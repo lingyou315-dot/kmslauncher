@@ -1,63 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  文件功能：广告机主界面布局
-  重要修正：将错误的 app:layout_constraintTop_of 修正为标准的 app:layout_constraintTop_toTopOf
--->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
-    <!-- 1. 最强播放引擎容器：ExoPlayer 专用视图 -->
+
     <androidx.media3.ui.PlayerView
-        android:id="@+id/exo_player_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:use_controller="false"
-        app:resize_mode="fill"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/marquee_container"
-        app:layout_constraintEnd_toStartOf="@+id/side_image_container"
-        app:layout_constraintHorizontal_weight="7.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <!-- 2. 图片展示层：当需要播放图片时切换到此视图 -->
-    <ImageView
-        android:id="@+id/main_image_player"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/marquee_container"
-        app:layout_constraintEnd_toStartOf="@+id/side_image_container"
-        app:layout_constraintHorizontal_weight="7.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <!-- 3. 侧边栏：用于显示额外广告图 -->
-    <ImageView
-        android:id="@+id/side_image_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#1A1A1A"
-        app:layout_constraintBottom_toTopOf="@+id/marquee_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="2.5"
-        app:layout_constraintStart_toEndOf="@+id/exo_player_view"
-        app:layout_constraintTop_toTopOf="parent" />
-    <!-- 4. 底部跑马灯：显示滚动字幕 -->
-    <FrameLayout
-        android:id="@+id/marquee_container"
+        android:id="@+id/playerView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#CC000000"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="match_parent"
+        app:use_controller="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:resize_mode="fit" />
+    <ImageView
+    android:id="@+id/imageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="fitCenter"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/marqueeContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#99000000"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
         <TextView
-            android:id="@+id/marquee_text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="KMSLauncher ExoPlayer 引擎已就绪..."
+            android:id="@+id/marqueeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:singleLine="true"
+            android:text="欢迎使用 KMS Launcher 广告管理系统，正在检测素材资源..."
+            android:visibility="gone"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="22sp"
+            android:textStyle="bold" />
     </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
