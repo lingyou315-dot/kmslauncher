@@ -14,7 +14,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,18 +35,15 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        viewBinding = true
-    }
 }
 
 dependencies {
-// Media3 核心库 (视频播放)
-    val media3Version = "1.2.0"
-    implementation("androidx.media3:media3-exoplayer:$media3Version")
-    implementation("androidx.media3:media3-ui:$media3Version")
-    implementation("androidx.media3:media3-common:$media3Version")
-    implementation("com.google.android.material:material:1.10.0")
-    // 协程 (异步处理文件)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
